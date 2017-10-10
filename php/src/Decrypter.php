@@ -24,8 +24,7 @@ class Decrypter {
 
         $header = substr($crypt12FileData, 0, self::HEADER_LENGTH);
         if (($header != self::BACKUP_CIPHER_HEADER_V2) && ($header != self::BACKUP_CIPHER_HEADER_V1)) {
-            echo "Wrong header!\n\n";
-            exit();
+            throw new Exception('Wrong header!');
         }
 
         $keyVersion = (int)bin2hex(substr($crypt12FileData, self::HEADER_LENGTH, 1));
@@ -42,7 +41,7 @@ class Decrypter {
         $keyFileData = file_get_contents($keyFile);
 
         if (strlen($keyFileData) <  32 + 16 + 32 + 16 + 32 + 1 + self::HEADER_LENGTH) {
-            echo "Error: Header mismatch\n\n";
+            throw new Exception('Error: Header mismatch');
         }
 
         $header = substr($keyFileData, 27, self::HEADER_LENGTH);
@@ -63,6 +62,9 @@ class Decrypter {
         $crypt12Data = substr(file_get_contents($crypt12File), 67, -36);
 
         $decrypted = openssl_decrypt($crypt12Data, 'aes-256-gcm', $key, OPENSSL_RAW_DATA, $iv, $this->gcmTag);
+        if ($decrypted === false) {
+            throw new Exception('Error: OpenSSL Decrypt failed!');
+        }
         $uncompressed = gzuncompress($decrypted);
         file_put_contents(__DIR__.'/msgstore.db', $uncompressed);
     }

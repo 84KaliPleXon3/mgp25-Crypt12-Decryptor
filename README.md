@@ -1,5 +1,9 @@
 ## Crypt12 Decryptor
-Tool for decrypting WhatsApp Crypt12 databases
+Tool for decrypting WhatsApp Crypt12 databases.
+
+**Files required:**
+- crypt12 db.
+- key file.
 
 ## Java
 
@@ -13,6 +17,11 @@ Tool for decrypting WhatsApp Crypt12 databases
 
 ![img](/assets/terminal.jpg)
 
+## PHP
+
+### Usage
+
+`php decrypt.php msgstore.db.crypt12 key`
 
 ## AES GCM
 
